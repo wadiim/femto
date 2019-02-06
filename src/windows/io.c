@@ -1,4 +1,5 @@
 #include <windows.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include "global.h"
 #include "utils.h"
@@ -7,6 +8,7 @@
 #include "io.h"
 
 wchar_t get_char(int *special_key);
+bool is_ctrl_pressed(INPUT_RECORD *ir);
 
 void write_console(const unsigned char *s, size_t len)
 {
@@ -67,16 +69,42 @@ wchar_t get_char(int *special_key)
 			continue;
 	} while (!(input.EventType == KEY_EVENT &&
 		input.Event.KeyEvent.bKeyDown));
-	if (input.Event.KeyEvent.wVirtualKeyCode == 8 ||
-		input.Event.KeyEvent.wVirtualKeyCode == 9 ||
-		input.Event.KeyEvent.wVirtualKeyCode == 13 ||
-		input.Event.KeyEvent.wVirtualKeyCode == 27 ||
+	if (input.Event.KeyEvent.wVirtualKeyCode == BACKSPACE ||
+		input.Event.KeyEvent.wVirtualKeyCode == TAB ||
+		input.Event.KeyEvent.wVirtualKeyCode == ENTER ||
+		input.Event.KeyEvent.wVirtualKeyCode == ESC ||
 		input.Event.KeyEvent.wVirtualKeyCode >= PAGE_UP &&
+		input.Event.KeyEvent.wVirtualKeyCode < ARROW_LEFT ||
+		input.Event.KeyEvent.wVirtualKeyCode > ARROW_DOWN &&
 		input.Event.KeyEvent.wVirtualKeyCode <= DEL ||
 		input.Event.KeyEvent.wVirtualKeyCode >= F_KEY(1) &&
 		input.Event.KeyEvent.wVirtualKeyCode <= F_KEY(12))
 	{
 		*special_key = input.Event.KeyEvent.wVirtualKeyCode;
+	}
+	else if (input.Event.KeyEvent.wVirtualKeyCode >= ARROW_LEFT &&
+		input.Event.KeyEvent.wVirtualKeyCode <= ARROW_DOWN)
+	{
+		if (is_ctrl_pressed(&input))
+		{
+			switch (input.Event.KeyEvent.wVirtualKeyCode)
+			{
+			case ARROW_LEFT:
+				*special_key = CTRL_ARROW_LEFT;
+				break;
+			case ARROW_UP:
+				*special_key = CTRL_ARROW_UP;
+				break;
+			case ARROW_RIGHT:
+				*special_key = CTRL_ARROW_RIGHT;
+				break;
+			case ARROW_DOWN:
+				*special_key = CTRL_ARROW_DOWN;
+				break;
+			}
+		}
+		else
+			*special_key = input.Event.KeyEvent.wVirtualKeyCode;
 	}
 	else if (input.Event.KeyEvent.uChar.UnicodeChar >= CTRL_KEY('a') &&
 		input.Event.KeyEvent.uChar.UnicodeChar <= CTRL_KEY('z'))
@@ -89,4 +117,10 @@ wchar_t get_char(int *special_key)
 		return input.Event.KeyEvent.uChar.UnicodeChar;
 	}
 	return '\0';
+}
+
+bool is_ctrl_pressed(INPUT_RECORD *ir)
+{
+	return ir->Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED ||
+		ir->Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED;
 }

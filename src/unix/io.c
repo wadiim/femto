@@ -145,6 +145,28 @@ int parse_escape_sequence(void)
 					}
 				}
 			}
+			else if (buf[2] == ';')
+			{
+				if (get_char(&buf[3]) == -1)
+					return ESC;
+				if (get_char(&buf[4]) == -1)
+					return ESC;
+
+				if (buf[3] == '5')
+				{
+					switch(buf[4])
+					{
+					case 'A':
+						return CTRL_ARROW_UP;
+					case 'B':
+						return CTRL_ARROW_DOWN;
+					case 'C':
+						return CTRL_ARROW_RIGHT;
+					case 'D':
+						return CTRL_ARROW_LEFT;
+					}
+				}
+			}
 		}
 		else
 		{

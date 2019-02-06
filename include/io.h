@@ -25,7 +25,11 @@ enum key
 	EXECUTE,
 	PRINT_SCREEN,
 	INSERT,
-	DEL
+	DEL,
+	CTRL_ARROW_LEFT,
+	CTRL_ARROW_UP,
+	CTRL_ARROW_RIGHT,
+	CTRL_ARROW_DOWN
 };
 
 void write_console(const unsigned char *s, size_t len);
