@@ -25,3 +25,7 @@ femto [file]
 | <kbd>Page down</kbd> | Scroll down |
 | <kbd>Home</kbd> | Go to start of line |
 | <kbd>End</kbd> | Go to end of line |
+
+## License
+
+[MIT](https://github.com/wadiim/femto/blob/master/LICENSE)
