@@ -8,6 +8,7 @@
 #include "io.h"
 
 wchar_t get_char(int *special_key);
+bool is_ctrl_char(INPUT_RECORD *ir);
 bool is_ctrl_pressed(INPUT_RECORD *ir);
 
 void write_console(const unsigned char *s, size_t len)
@@ -61,33 +62,32 @@ wchar_t get_char(int *special_key)
 {
 	INPUT_RECORD input;
 	DWORD nread;
+
 	do
 	{
 		if (!ReadConsoleInputW(hIn, &input, 1, &nread))
 			die("ReadConsoleInputW");
-		if (input.Event.KeyEvent.wVirtualKeyCode == '\0')
-			continue;
 	} while (!(input.EventType == KEY_EVENT &&
-		input.Event.KeyEvent.bKeyDown));
-	if (input.Event.KeyEvent.wVirtualKeyCode == BACKSPACE ||
-		input.Event.KeyEvent.wVirtualKeyCode == TAB ||
-		input.Event.KeyEvent.wVirtualKeyCode == ENTER ||
-		input.Event.KeyEvent.wVirtualKeyCode == ESC ||
-		input.Event.KeyEvent.wVirtualKeyCode >= PAGE_UP &&
-		input.Event.KeyEvent.wVirtualKeyCode < ARROW_LEFT ||
-		input.Event.KeyEvent.wVirtualKeyCode > ARROW_DOWN &&
-		input.Event.KeyEvent.wVirtualKeyCode <= DEL ||
-		input.Event.KeyEvent.wVirtualKeyCode >= F_KEY(1) &&
-		input.Event.KeyEvent.wVirtualKeyCode <= F_KEY(12))
+		input.Event.KeyEvent.bKeyDown &&
+		input.Event.KeyEvent.wVirtualKeyCode));
+
+	WORD key_code = input.Event.KeyEvent.wVirtualKeyCode;
+
+	if (key_code == BACKSPACE || key_code == TAB || key_code == ENTER ||
+		key_code == ESC || key_code == PAGE_UP || key_code == END ||
+		key_code == HOME || key_code == SELECT || key_code == PRINT ||
+		key_code == EXECUTE || key_code == PRINT_SCREEN ||
+		key_code == INSERT || key_code == DEL ||
+		key_code >= F_KEY(1) && key_code <= F_KEY(12))
 	{
-		*special_key = input.Event.KeyEvent.wVirtualKeyCode;
+		*special_key = key_code;
 	}
-	else if (input.Event.KeyEvent.wVirtualKeyCode >= ARROW_LEFT &&
-		input.Event.KeyEvent.wVirtualKeyCode <= ARROW_DOWN)
+	else if (key_code == ARROW_LEFT || key_code == ARROW_UP ||
+		key_code == ARROW_RIGHT || key_code == ARROW_DOWN)
 	{
 		if (is_ctrl_pressed(&input))
 		{
-			switch (input.Event.KeyEvent.wVirtualKeyCode)
+			switch (key_code)
 			{
 			case ARROW_LEFT:
 				*special_key = CTRL_ARROW_LEFT;
@@ -104,13 +104,10 @@ wchar_t get_char(int *special_key)
 			}
 		}
 		else
-			*special_key = input.Event.KeyEvent.wVirtualKeyCode;
+			*special_key = key_code;
 	}
-	else if (input.Event.KeyEvent.uChar.UnicodeChar >= CTRL_KEY('a') &&
-		input.Event.KeyEvent.uChar.UnicodeChar <= CTRL_KEY('z'))
-	{
+	else if (is_ctrl_char(&input))
 		*special_key = input.Event.KeyEvent.uChar.UnicodeChar;
-	}
 	else
 	{
 		special_key = '\0';
@@ -123,4 +120,10 @@ bool is_ctrl_pressed(INPUT_RECORD *ir)
 {
 	return ir->Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED ||
 		ir->Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED;
+}
+
+bool is_ctrl_char(INPUT_RECORD *ir)
+{
+	return ir->Event.KeyEvent.uChar.UnicodeChar >= CTRL_KEY('a') &&
+		ir->Event.KeyEvent.uChar.UnicodeChar <= CTRL_KEY('z');
 }
