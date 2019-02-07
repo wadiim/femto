@@ -8,14 +8,14 @@ enum { NORMAL, INPUT, MESSAGE } status_mode;
 
 typedef struct line Line;
 
-typedef struct status
+typedef struct
 {
 	char *msg;
 	size_t len;
 	size_t cap;
 } Status;
 
-typedef struct status_input
+typedef struct
 {
 	size_t cx;
 	char *msg;

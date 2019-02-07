@@ -30,7 +30,7 @@
 
 typedef struct line Line;
 
-typedef struct file
+typedef struct
 {
 	size_t cap;
 	char *path;

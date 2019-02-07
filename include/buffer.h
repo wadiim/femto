@@ -3,7 +3,7 @@
 
 typedef struct line Line;
 
-typedef struct buffer
+typedef struct
 {
 	Line *curr;
 	Line *begin;

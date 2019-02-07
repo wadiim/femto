@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-typedef struct cursor
+typedef struct
 {
 	size_t x;
 	size_t y;
