@@ -115,16 +115,16 @@ void process_keypress(void)
 			do_page_down();
 			break;
 		case ARROW_LEFT:
-			do_arrow_left();
+			do_left();
 			break;
 		case ARROW_UP:
-			do_arrow_up();
+			do_up();
 			break;
 		case ARROW_RIGHT:
-			do_arrow_right();
+			do_right();
 			break;
 		case ARROW_DOWN:
-			do_arrow_down();
+			do_down();
 			break;
 		case CTRL_KEY('s'):
 			do_save();

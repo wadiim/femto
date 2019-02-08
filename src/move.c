@@ -6,8 +6,8 @@
 #include "file.h"
 #include "line.h"
 
-void do_up(void);
-void do_down(void);
+void move_up(void);
+void move_down(void);
 
 void do_home(void)
 {
@@ -30,13 +30,13 @@ void do_page_up(void)
 	for (i = y - 1; i > 0 && femto.file.top->prev &&
 		femto.file.buffer.curr->prev; --i)
 	{
-		do_up();
+		move_up();
 		femto.file.top = femto.file.top->prev;
 	}
 	if (femto.file.cursor.y != 0 && femto.file.top->prev == NULL)
 	{
 		for (; i > 0 && femto.file.buffer.curr->prev; --i)
-			do_up();
+			move_up();
 	}
 	fix_cursor_x();
 }
@@ -48,51 +48,51 @@ void do_page_down(void)
 	for (size_t i = 0; i < y - 1 && femto.file.top->next &&
 		femto.file.buffer.curr->next; ++i)
 	{
-		do_down();
+		move_down();
 		femto.file.top = femto.file.top->next;
 	}
 	fix_cursor_x();
 }
 
-void do_arrow_left(void)
+void do_left(void)
 {
 	if (femto.file.cursor.x > 0)
 		--femto.file.cursor.x;
 }
 
-void do_arrow_up(void)
+void do_up(void)
 {
 	if (femto.file.buffer.curr->prev)
 	{
 		if (femto.file.buffer.curr == femto.file.top)
 			femto.file.top = femto.file.top->prev;
-		do_up();
+		move_up();
 		fix_cursor_x();
 	}
 }
 
-void do_arrow_right(void)
+void do_right(void)
 {
 	if (femto.file.cursor.x < num_of_mbchars(femto.file.buffer.curr))
 		++femto.file.cursor.x;
 }
 
-void do_arrow_down(void)
+void do_down(void)
 {
 	if (femto.file.buffer.curr->next)
 	{
-		do_down();
+		move_down();
 		fix_cursor_x();
 	}
 }
 
-void do_up(void)
+void move_up(void)
 {
 	--femto.file.cursor.y;
 	femto.file.buffer.curr = femto.file.buffer.curr->prev;
 }
 
-void do_down(void)
+void move_down(void)
 {
 	++femto.file.cursor.y;
 	femto.file.buffer.curr = femto.file.buffer.curr->next;
