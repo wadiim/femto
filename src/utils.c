@@ -90,6 +90,17 @@ size_t num_of_mbchars(Line *line)
 	return num;
 }
 
+size_t index_to_mbnum(const unsigned char *s, size_t n)
+{
+	size_t num = 0;
+	for (size_t i = 0; i < n; ++i)
+	{
+		if (!is_continuation_byte(s[i]))
+			++num;
+	}
+	return num;
+}
+
 size_t mbnum_to_index(const unsigned char *s, size_t n)
 {
 	size_t pos = 0;
