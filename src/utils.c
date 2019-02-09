@@ -81,13 +81,7 @@ size_t length_to_width(const unsigned char *s, size_t len)
 
 size_t num_of_mbchars(Line *line)
 {
-	size_t num = 0;
-	for (size_t i = 0; i < line->len; ++i)
-	{
-		if (!is_continuation_byte(line->s[i]))
-			++num;
-	}
-	return num;
+	return index_to_mbnum(line->s, line->len);
 }
 
 size_t index_to_mbnum(const unsigned char *s, size_t n)
