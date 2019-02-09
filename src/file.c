@@ -21,13 +21,13 @@ void file_init(File *file)
 void file_load(File *file)
 {
 	char *line = NULL;
-	size_t nread, len = 0;
+	size_t len = 0;
 
 	FILE *f = fopen(file->path, "r");
 	if (!f)
 		die("fopen");
 
-	while((nread = getline(&line, &len, f)) != EOF && line)
+	while(getline(&line, &len, f) != EOF && line)
 	{
 		for (size_t len = strlen(line); len > 0 &&
 			(line[len - 1] == '\n' || line[len - 1] == '\r'); --len)
