@@ -50,12 +50,12 @@ char *size_t_to_str(size_t num)
 
 size_t line_width(Line *line)
 {
-	return get_column(line->s, line->len);
+	return length_to_width(line->s, line->len);
 }
 
 size_t str_width(const unsigned char *s, size_t len)
 {
-	return get_column(s, len);
+	return length_to_width(s, len);
 }
 
 void fill_with_spaces(char *s, size_t len)
@@ -64,17 +64,17 @@ void fill_with_spaces(char *s, size_t len)
 		s[i] = ' ';
 }
 
-size_t get_column(const unsigned char *s, size_t at)
+size_t length_to_width(const unsigned char *s, size_t len)
 {
 	size_t col = 0;
-	for (size_t i = 0; i < at; ++i)
+	for (size_t i = 0; i < len; ++i)
 	{
 		if (s[i] == '\t')
 			col += femto.tabsize - col % femto.tabsize;
 		else if (!is_continuation_byte(s[i]))
 			++col;
-		else if (s[at] != 0)
-			++at;
+		else if (s[len] != 0)
+			++len;
 	}
 	return col;
 }
@@ -90,7 +90,7 @@ size_t num_of_mbchars(Line *line)
 	return num;
 }
 
-size_t mbchar_position(const unsigned char *s, size_t n)
+size_t mbnum_to_index(const unsigned char *s, size_t n)
 {
 	size_t pos = 0;
 	for (size_t i = 0; i < n; ++i)

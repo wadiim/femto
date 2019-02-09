@@ -14,7 +14,7 @@ void concatenate_with_previous_line(void);
 void insert(const unsigned char *s)
 {
 	line_insert_str(femto.file.buffer.curr,
-		mbchar_position(femto.file.buffer.curr->s,
+		mbnum_to_index(femto.file.buffer.curr->s,
 			femto.file.cursor.x), s);
 	femto.file.is_modified = true;
 	++femto.file.cursor.x;
@@ -62,7 +62,7 @@ void do_tab(void)
 void delete_character(void)
 {
 	size_t char_len = 1;
-	size_t i = mbchar_position(femto.file.buffer.curr->s,
+	size_t i = mbnum_to_index(femto.file.buffer.curr->s,
 		femto.file.cursor.x);
 
 	while (is_continuation_byte(femto.file.buffer.curr->s[--i]))
@@ -86,7 +86,7 @@ void delete_empty_line(void)
 
 void break_line_into_two(void)
 {
-	size_t at = mbchar_position(femto.file.buffer.curr->s,
+	size_t at = mbnum_to_index(femto.file.buffer.curr->s,
 		femto.file.cursor.x);
 	unsigned char *line = (unsigned char *)malloc(
 		femto.file.buffer.curr->len - at + 1);

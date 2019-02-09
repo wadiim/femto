@@ -18,9 +18,9 @@ size_t num_of_mbchars(Line *line);
 bool is_continuation_byte(unsigned char c);
 void fill_with_spaces(char *s, size_t len);
 size_t find_first_nonblank(const unsigned char *s);
-size_t get_column(const unsigned char *s, size_t at);
+size_t length_to_width(const unsigned char *s, size_t len);
 size_t str_width(const unsigned char *s, size_t len);
-size_t mbchar_position(const unsigned char *s, size_t n);
+size_t mbnum_to_index(const unsigned char *s, size_t n);
 size_t width_to_length(const unsigned char *s, size_t width);
 
 #endif

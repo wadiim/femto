@@ -152,7 +152,7 @@ void status_input_print(void)
 
 	size_t len;
 	size_t input_width = line_width(statin->input);
-	size_t start = mbchar_position(statin->input->s, statin->charsoff);
+	size_t start = mbnum_to_index(statin->input->s, statin->charsoff);
 
 	if (input_width - statin->charsoff > free_space)
 		len = width_to_length(statin->input->s + start, free_space);
@@ -205,7 +205,7 @@ void status_set_default(size_t len)
 void status_do_insert(unsigned char *s)
 {
 	line_insert_str(statin->input,
-		mbchar_position(statin->input->s, statin->cx++), s);
+		mbnum_to_index(statin->input->s, statin->cx++), s);
 }
 
 void status_do_home(void)
@@ -235,7 +235,7 @@ void status_do_backspace(void)
 	if (statin->input->len > 0 && statin->cx > 0)
 	{
 		size_t charlen = 1;
-		size_t i = mbchar_position(statin->input->s, statin->cx);
+		size_t i = mbnum_to_index(statin->input->s, statin->cx);
 		while (is_continuation_byte(statin->input->s[--i]))
 			++charlen;
 		line_delete_str(statin->input, i, charlen);

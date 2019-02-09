@@ -63,7 +63,7 @@ void refresh_screen(void)
 {
 	Window window;
 	Cursor cursor = {
-		get_column(femto.file.buffer.curr->s, femto.file.cursor.x),
+		length_to_width(femto.file.buffer.curr->s, femto.file.cursor.x),
 		0
 	};
 
