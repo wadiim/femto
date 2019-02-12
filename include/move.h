@@ -9,5 +9,7 @@ void do_up(void);
 void do_down(void);
 void do_left(void);
 void do_right(void);
+void do_prev_word(void);
+void do_next_word(void);
 
 #endif

@@ -1,3 +1,6 @@
+#include <stdbool.h>
+#include <wctype.h>
+#include <wchar.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "status.h"
@@ -7,6 +10,8 @@
 #include "line.h"
 #include "die.h"
 #include "io.h"
+
+#define MAXCHARLEN 6
 
 void fix_cursor_x(void)
 {
@@ -136,4 +141,26 @@ size_t find_first_nonblank(const unsigned char *s)
 	while (isspace(s[i]) && s[i++] != 0)
 		;
 	return i;
+}
+
+bool is_alnum_mbchar(const unsigned char *s)
+{
+	wchar_t wc;
+	if (mbtowc(&wc, (char *)s, MAXCHARLEN) < 0)
+			return 0;
+	return iswalnum(wc);
+}
+
+size_t move_mbleft(const unsigned char *s, size_t pos)
+{
+	while (pos && is_continuation_byte(s[--pos]))
+		;
+	return pos;
+}
+
+size_t move_mbright(const unsigned char *s, size_t pos)
+{
+	while (s[++pos] && is_continuation_byte(s[pos]))
+		;
+	return pos;
 }

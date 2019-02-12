@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <string.h>
 #include "femto.h"
 #include "utils.h"
@@ -96,4 +97,70 @@ void move_down(void)
 {
 	++femto.file.cursor.y;
 	femto.file.buffer.curr = femto.file.buffer.curr->next;
+}
+
+void do_prev_word(void)
+{
+	unsigned char *str = femto.file.buffer.curr->s;
+	size_t pos = mbnum_to_index(str, femto.file.cursor.x);
+	bool seen_a_word = false, step_forward = false;
+
+	for (;;)
+	{
+		if (pos == 0)
+		{
+			if (femto.file.buffer.curr->prev == NULL)
+				break;
+			femto.file.buffer.curr = femto.file.buffer.curr->prev;
+			pos = femto.file.buffer.curr->len;
+			--femto.file.cursor.y;
+		}
+		pos = move_mbleft(femto.file.buffer.curr->s, pos);
+		if (is_alnum_mbchar(femto.file.buffer.curr->s + pos))
+		{
+			seen_a_word = true;
+			if (pos == 0)
+				break;
+		}
+		else if (seen_a_word)
+		{
+			step_forward = true;
+			break;
+		}
+	}
+
+	if (step_forward)
+		pos = move_mbright(femto.file.buffer.curr->s, pos);
+
+	femto.file.cursor.x = index_to_mbnum(str, pos);
+}
+
+void do_next_word(void)
+{
+	unsigned char *str = femto.file.buffer.curr->s;
+	size_t pos = mbnum_to_index(str, femto.file.cursor.x);
+	bool started_on_word = is_alnum_mbchar(femto.file.buffer.curr->s + pos);
+	bool seen_space = !started_on_word;
+
+	for (;;)
+	{
+		if (femto.file.buffer.curr->s[pos] == '\0')
+		{
+			if (femto.file.buffer.curr->next == NULL)
+				break;
+			femto.file.buffer.curr = femto.file.buffer.curr->next;
+			++femto.file.cursor.y;
+			seen_space = true;
+			pos = 0;
+		}
+		else
+			pos = move_mbright(femto.file.buffer.curr->s, pos);
+
+		if (!is_alnum_mbchar(femto.file.buffer.curr->s + pos))
+			seen_space = true;
+		else if (seen_space)
+			break;
+	}
+
+	femto.file.cursor.x = index_to_mbnum(str, pos);
 }

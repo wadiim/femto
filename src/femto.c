@@ -1,3 +1,4 @@
+#include <locale.h>
 #include <stdio.h>
 #include <ctype.h>
 #include "cursor.h"
@@ -24,6 +25,7 @@ void init(int argc, char **argv)
 		show_usage(argv[0]);
 
 	term_init();
+	setlocale(LC_ALL, "");
 	file_init(&femto.file);
 	femto.tabsize = get_tabsize();
 
@@ -125,6 +127,12 @@ void process_keypress(void)
 			break;
 		case ARROW_DOWN:
 			do_down();
+			break;
+		case CTRL_ARROW_LEFT:
+			do_prev_word();
+			break;
+		case CTRL_ARROW_RIGHT:
+			do_next_word();
 			break;
 		case CTRL_KEY('s'):
 			do_save();
