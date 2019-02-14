@@ -21,10 +21,9 @@ femto [file]
 | ------------- | -------- |
 | <kbd>Ctrl</kbd> + <kbd>Q</kbd> | Quit |
 | <kbd>Ctrl</kbd> + <kbd>S</kbd> | Save |
-| <kbd>Page up</kbd> | Scroll up |
-| <kbd>Page down</kbd> | Scroll down |
-| <kbd>Home</kbd> | Go to start of line |
-| <kbd>End</kbd> | Go to end of line |
+| <kbd>Home</kbd>/<kbd>End</kbd> | Go to start/end of line |
+| <kbd>Page up</kbd>/<kbd>Page down</kbd> | Scroll page up/down |
+| <kbd>Ctrl</kbd> + <kbd>←</kbd>/<kbd>→</kbd> | Move to previous/next word |
 
 ## License
 
