@@ -164,6 +164,10 @@ int parse_escape_sequence(void)
 						return CTRL_ARROW_RIGHT;
 					case 'D':
 						return CTRL_ARROW_LEFT;
+					case 'F':
+						return CTRL_END;
+					case 'H':
+						return CTRL_HOME;
 					}
 				}
 			}

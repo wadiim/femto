@@ -74,21 +74,27 @@ wchar_t get_char(int *special_key)
 	WORD key_code = input.Event.KeyEvent.wVirtualKeyCode;
 
 	if (key_code == BACKSPACE || key_code == TAB || key_code == ENTER ||
-		key_code == ESC || key_code == PAGE_UP || key_code == END ||
-		key_code == HOME || key_code == SELECT || key_code == PRINT ||
-		key_code == EXECUTE || key_code == PRINT_SCREEN ||
-		key_code == INSERT || key_code == DEL ||
+		key_code == ESC || key_code == PAGE_UP || key_code == SELECT ||
+		key_code == PRINT || key_code == EXECUTE || key_code == DEL ||
+		key_code == PRINT_SCREEN || key_code == INSERT ||
 		key_code >= F_KEY(1) && key_code <= F_KEY(12))
 	{
 		*special_key = key_code;
 	}
-	else if (key_code == ARROW_LEFT || key_code == ARROW_UP ||
+	else if (key_code == HOME || key_code == END ||
+		key_code == ARROW_LEFT || key_code == ARROW_UP ||
 		key_code == ARROW_RIGHT || key_code == ARROW_DOWN)
 	{
 		if (is_ctrl_pressed(&input))
 		{
 			switch (key_code)
 			{
+			case END:
+				*special_key = CTRL_END;
+				break;
+			case HOME:
+				*special_key = CTRL_HOME;
+				break;
 			case ARROW_LEFT:
 				*special_key = CTRL_ARROW_LEFT;
 				break;
