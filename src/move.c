@@ -173,16 +173,16 @@ void do_top(void)
 
 void do_bottom(void)
 {
-	femto.file.cursor.x = 0;
 	while (femto.file.buffer.curr->next)
 	{
 		++femto.file.cursor.y;
 		femto.file.buffer.curr = femto.file.buffer.curr->next;
 	}
 
-	size_t y;
+	do_end();
 	femto.file.top = femto.file.buffer.curr;
 
+	size_t y;
 	get_window_size(NULL, &y);
 	while (--y && femto.file.top->prev)
 		femto.file.top = femto.file.top->prev;
