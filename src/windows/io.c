@@ -8,7 +8,6 @@
 #include "io.h"
 
 wchar_t get_char(int *special_key);
-bool is_ctrl_char(INPUT_RECORD *ir);
 bool is_ctrl_pressed(INPUT_RECORD *ir);
 
 void write_console(const unsigned char *s, size_t len)
@@ -71,66 +70,77 @@ wchar_t get_char(int *special_key)
 		input.Event.KeyEvent.bKeyDown &&
 		input.Event.KeyEvent.wVirtualKeyCode));
 
-	WORD key_code = input.Event.KeyEvent.wVirtualKeyCode;
+	wchar_t retval = '\0';
+	WORD keycode = input.Event.KeyEvent.wVirtualKeyCode;
+	WORD unicode = input.Event.KeyEvent.uChar.UnicodeChar;
 
-	if (key_code == BACKSPACE || key_code == TAB || key_code == ENTER ||
-		key_code == ESC || key_code == DEL || key_code == PAGE_UP ||
-		key_code == PAGE_DOWN || key_code == SELECT ||
-		key_code == PRINT || key_code == EXECUTE ||
-		key_code == PRINT_SCREEN || key_code == INSERT ||
-		key_code >= F_KEY(1) && key_code <= F_KEY(12))
+	if (unicode >= CTRL_KEY('a') && unicode <= CTRL_KEY('z'))
+		*special_key = unicode;
+	else if (is_ctrl_pressed(&input))
 	{
-		*special_key = key_code;
-	}
-	else if (key_code == HOME || key_code == END ||
-		key_code == ARROW_LEFT || key_code == ARROW_UP ||
-		key_code == ARROW_RIGHT || key_code == ARROW_DOWN)
-	{
-		if (is_ctrl_pressed(&input))
+		switch (keycode)
 		{
-			switch (key_code)
-			{
-			case END:
-				*special_key = CTRL_END;
-				break;
-			case HOME:
-				*special_key = CTRL_HOME;
-				break;
-			case ARROW_LEFT:
-				*special_key = CTRL_ARROW_LEFT;
-				break;
-			case ARROW_UP:
-				*special_key = CTRL_ARROW_UP;
-				break;
-			case ARROW_RIGHT:
-				*special_key = CTRL_ARROW_RIGHT;
-				break;
-			case ARROW_DOWN:
-				*special_key = CTRL_ARROW_DOWN;
-				break;
-			}
+		case END:
+			*special_key = CTRL_END;
+			break;
+		case HOME:
+			*special_key = CTRL_HOME;
+			break;
+		case ARROW_LEFT:
+			*special_key = CTRL_ARROW_LEFT;
+			break;
+		case ARROW_UP:
+			*special_key = CTRL_ARROW_UP;
+			break;
+		case ARROW_RIGHT:
+			*special_key = CTRL_ARROW_RIGHT;
+			break;
+		case ARROW_DOWN:
+			*special_key = CTRL_ARROW_DOWN;
+			break;
+		default:
+			*special_key = '\0';
+			retval = unicode;
+			break;
 		}
-		else
-			*special_key = key_code;
 	}
-	else if (is_ctrl_char(&input))
-		*special_key = input.Event.KeyEvent.uChar.UnicodeChar;
+	else if (keycode >= F_KEY(1) && keycode <= F_KEY(12))
+		*special_key = keycode;
 	else
 	{
-		special_key = '\0';
-		return input.Event.KeyEvent.uChar.UnicodeChar;
+		switch (keycode)
+		{
+		case BACKSPACE:
+		case TAB:
+		case ENTER:
+		case ESC:
+		case PAGE_UP:
+		case PAGE_DOWN:
+		case END:
+		case HOME:
+		case ARROW_LEFT:
+		case ARROW_UP:
+		case ARROW_RIGHT:
+		case ARROW_DOWN:
+		case SELECT:
+		case PRINT:
+		case EXECUTE:
+		case PRINT_SCREEN:
+		case INSERT:
+		case DEL:
+			*special_key = keycode;
+			break;
+		default:
+			*special_key = '\0';
+			retval = unicode;
+			break;
+		}
 	}
-	return '\0';
+	return retval;
 }
 
 bool is_ctrl_pressed(INPUT_RECORD *ir)
 {
 	return ir->Event.KeyEvent.dwControlKeyState & LEFT_CTRL_PRESSED ||
 		ir->Event.KeyEvent.dwControlKeyState & RIGHT_CTRL_PRESSED;
-}
-
-bool is_ctrl_char(INPUT_RECORD *ir)
-{
-	return ir->Event.KeyEvent.uChar.UnicodeChar >= CTRL_KEY('a') &&
-		ir->Event.KeyEvent.uChar.UnicodeChar <= CTRL_KEY('z');
 }
