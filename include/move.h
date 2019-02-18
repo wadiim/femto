@@ -11,5 +11,7 @@ void do_left(void);
 void do_right(void);
 void do_prev_word(void);
 void do_next_word(void);
+void do_top(void);
+void do_bottom(void);
 
 #endif

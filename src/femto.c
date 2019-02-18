@@ -128,6 +128,12 @@ void process_keypress(void)
 		case ARROW_DOWN:
 			do_down();
 			break;
+		case CTRL_HOME:
+			do_top();
+			break;
+		case CTRL_END:
+			do_bottom();
+			break;
 		case CTRL_ARROW_LEFT:
 			do_prev_word();
 			break;

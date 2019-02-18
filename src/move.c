@@ -164,3 +164,26 @@ void do_next_word(void)
 
 	femto.file.cursor.x = index_to_mbnum(str, pos);
 }
+
+void do_top(void)
+{
+	femto.file.cursor.x = femto.file.cursor.y = 0;
+	femto.file.top = femto.file.buffer.curr = femto.file.buffer.begin;
+}
+
+void do_bottom(void)
+{
+	femto.file.cursor.x = 0;
+	while (femto.file.buffer.curr->next)
+	{
+		++femto.file.cursor.y;
+		femto.file.buffer.curr = femto.file.buffer.curr->next;
+	}
+
+	size_t y;
+	femto.file.top = femto.file.buffer.curr;
+
+	get_window_size(NULL, &y);
+	while (--y && femto.file.top->prev)
+		femto.file.top = femto.file.top->prev;
+}
