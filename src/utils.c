@@ -53,11 +53,6 @@ char *size_t_to_str(size_t num)
 	return str;
 }
 
-size_t line_width(Line *line)
-{
-	return length_to_width(line->s, line->len);
-}
-
 size_t str_width(const unsigned char *s, size_t len)
 {
 	return length_to_width(s, len);
@@ -82,11 +77,6 @@ size_t length_to_width(const unsigned char *s, size_t len)
 			++len;
 	}
 	return col;
-}
-
-size_t line_mblen(Line *line)
-{
-	return index_to_mbnum(line->s, line->len);
 }
 
 size_t index_to_mbnum(const unsigned char *s, size_t n)

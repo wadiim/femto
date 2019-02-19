@@ -6,15 +6,11 @@
 
 #define UTF8_CONTINUATION_BYTE 0
 
-typedef struct line Line;
-
 void fix_cursor_x(void);
 size_t get_tabsize(void);
 size_t utf8_len(unsigned char c);
 char *size_t_to_str(size_t num);
-size_t line_width(Line *line);
 bool is_file_exist(char *filename);
-size_t line_mblen(Line *line);
 bool is_continuation_byte(unsigned char c);
 void fill_with_spaces(char *s, size_t len);
 bool is_alnum_mbchar(const unsigned char *s);

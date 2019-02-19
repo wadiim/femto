@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "utils.h"
 #include "line.h"
 #include "die.h"
 
@@ -92,4 +93,14 @@ void line_free(Line *line)
 		free(temp->s);
 		free(temp);
 	}
+}
+
+size_t line_width(Line *line)
+{
+	return length_to_width(line->s, line->len);
+}
+
+size_t line_mblen(Line *line)
+{
+	return index_to_mbnum(line->s, line->len);
 }

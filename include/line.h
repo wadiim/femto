@@ -21,5 +21,7 @@ void line_delete_str(Line *line, size_t at, size_t len);
 void line_insert_char(Line *line, size_t at, unsigned char c);
 void line_delete_char(Line *line, size_t at);
 void line_free(Line *line);
+size_t line_width(Line *line);
+size_t line_mblen(Line *line);
 
 #endif
