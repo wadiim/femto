@@ -21,7 +21,7 @@ void do_home(void)
 
 void do_end(void)
 {
-	femto.file.cursor.x = num_of_mbchars(femto.file.buffer.curr);
+	femto.file.cursor.x = line_mblen(femto.file.buffer.curr);
 }
 
 void do_page_up(void)
@@ -74,7 +74,7 @@ void do_up(void)
 
 void do_right(void)
 {
-	if (femto.file.cursor.x < num_of_mbchars(femto.file.buffer.curr))
+	if (femto.file.cursor.x < line_mblen(femto.file.buffer.curr))
 		++femto.file.cursor.x;
 }
 

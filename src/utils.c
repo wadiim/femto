@@ -15,7 +15,7 @@
 
 void fix_cursor_x(void)
 {
-	size_t len = num_of_mbchars(femto.file.buffer.curr);
+	size_t len = line_mblen(femto.file.buffer.curr);
 	if (femto.file.cursor.x > len)
 		femto.file.cursor.x = len;
 }
@@ -84,7 +84,7 @@ size_t length_to_width(const unsigned char *s, size_t len)
 	return col;
 }
 
-size_t num_of_mbchars(Line *line)
+size_t line_mblen(Line *line)
 {
 	return index_to_mbnum(line->s, line->len);
 }

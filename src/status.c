@@ -215,7 +215,7 @@ void status_do_home(void)
 
 void status_do_end(void)
 {
-	statin->cx = num_of_mbchars(statin->input);
+	statin->cx = line_mblen(statin->input);
 }
 
 void status_do_arrow_left(void)
@@ -226,7 +226,7 @@ void status_do_arrow_left(void)
 
 void status_do_arrow_right(void)
 {
-	if (statin->cx < num_of_mbchars(statin->input))
+	if (statin->cx < line_mblen(statin->input))
 		++statin->cx;
 }
 

@@ -45,7 +45,7 @@ void do_enter(void)
 {
 	line_insert(femto.file.buffer.curr, femto.file.buffer.curr->next);
 
-	if (femto.file.cursor.x < num_of_mbchars(femto.file.buffer.curr))
+	if (femto.file.cursor.x < line_mblen(femto.file.buffer.curr))
 		break_line_into_two();
 
 	femto.file.buffer.curr = femto.file.buffer.curr->next;
@@ -79,7 +79,7 @@ void delete_empty_line(void)
 	if (femto.file.buffer.curr == femto.file.top && femto.file.top->prev)
 		femto.file.top = femto.file.top->prev;
 	femto.file.buffer.curr = femto.file.buffer.curr->prev;
-	femto.file.cursor.x = num_of_mbchars(femto.file.buffer.curr);
+	femto.file.cursor.x = line_mblen(femto.file.buffer.curr);
 	--femto.file.cursor.y;
 	line_delete(femto.file.buffer.curr->next);
 }
@@ -105,7 +105,7 @@ void concatenate_with_previous_line(void)
 	memmove(line, femto.file.buffer.curr->s,
 		femto.file.buffer.curr->len);
 	line[femto.file.buffer.curr->len] = '\0';
-	femto.file.cursor.x = num_of_mbchars(femto.file.buffer.curr->prev);
+	femto.file.cursor.x = line_mblen(femto.file.buffer.curr->prev);
 	line_insert_str(femto.file.buffer.curr->prev,
 		femto.file.buffer.curr->prev->len, line);
 	femto.file.buffer.curr = femto.file.buffer.curr->prev;
