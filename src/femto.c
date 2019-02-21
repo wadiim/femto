@@ -11,7 +11,7 @@
 #include "die.h"
 #include "io.h"
 
-void show_usage(char *name);
+void show_usage(void);
 
 size_t fix_cursor_position(Window *window, Cursor *cursor);
 void print(Window *window, Cursor *cursor, size_t rowsoff);
@@ -22,7 +22,7 @@ void do_quit(unsigned char *s);
 void init(int argc, char **argv)
 {
 	if (argc > 2)
-		show_usage(argv[0]);
+		show_usage();
 
 	term_init();
 	setlocale(LC_ALL, "");
@@ -300,8 +300,8 @@ void do_quit(unsigned char *s)
 	}
 }
 
-void show_usage(char *name)
+void show_usage(void)
 {
-	printf("Usage: %s [<file>]\n", name);
+	printf("Usage: femto [file]\n");
 	exit(0);
 }
