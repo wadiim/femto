@@ -12,6 +12,7 @@ set(SOURCE_FILES
     status.c
     femto.c
     utils.c
+    chars.c
     main.c
     file.c
     line.c

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "utils.h"
+#include "chars.h"
 #include "line.h"
 #include "die.h"
 

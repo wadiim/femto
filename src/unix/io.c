@@ -4,7 +4,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdio.h>
-#include "utils.h"
+#include "chars.h"
 #include "die.h"
 #include "io.h"
 

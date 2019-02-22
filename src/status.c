@@ -1,6 +1,7 @@
 #include "status.h"
 #include "cursor.h"
 #include "utils.h"
+#include "chars.h"
 #include "femto.h"
 #include "file.h"
 #include "term.h"

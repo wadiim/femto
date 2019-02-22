@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "femto.h"
 #include "utils.h"
+#include "chars.h"
 #include "text.h"
 #include "line.h"
 #include "file.h"

@@ -2,6 +2,7 @@
 #include <string.h>
 #include "femto.h"
 #include "utils.h"
+#include "chars.h"
 #include "move.h"
 #include "term.h"
 #include "file.h"

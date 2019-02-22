@@ -1,6 +1,4 @@
 #include <stdbool.h>
-#include <wctype.h>
-#include <wchar.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "status.h"
@@ -10,8 +8,6 @@
 #include "line.h"
 #include "die.h"
 #include "io.h"
-
-#define MAXCHARLEN 6
 
 void fix_cursor_x(void)
 {
@@ -27,19 +23,6 @@ size_t get_tabsize(void)
 	write_console((unsigned char *)"\t", 1);
 	get_cursor_position(&x, NULL);
 	return x;
-}
-
-size_t utf8_len(unsigned char c)
-{
-	if ((c & (1 << 7)) == 0)
-		return 1;
-	if ((c & (1 << 6)) == 0)
-		return UTF8_CONTINUATION_BYTE;
-	if ((c & (1 << 5)) == 0)
-		return 2;
-	if ((c & (1 << 4)) == 0)
-		return 3;
-	return 4;
 }
 
 char *size_t_to_str(size_t num)
@@ -79,30 +62,6 @@ size_t length_to_width(const unsigned char *s, size_t len)
 	return col;
 }
 
-size_t index_to_mbnum(const unsigned char *s, size_t n)
-{
-	size_t num = 0;
-	for (size_t i = 0; i < n; ++i)
-	{
-		if (!is_continuation_byte(s[i]))
-			++num;
-	}
-	return num;
-}
-
-size_t mbnum_to_index(const unsigned char *s, size_t n)
-{
-	size_t pos = 0;
-	for (size_t i = 0; i < n; ++i)
-	{
-		if (!is_continuation_byte(s[pos]))
-			++pos;
-		while (is_continuation_byte(s[pos]))
-			++pos;
-	}
-	return pos;
-}
-
 size_t width_to_length(const unsigned char *s, size_t width)
 {
 	size_t len = 0, tabsize;
@@ -131,26 +90,4 @@ size_t find_first_nonblank(const unsigned char *s)
 	while (isspace(s[i]) && s[i++] != 0)
 		;
 	return i;
-}
-
-bool is_alnum_mbchar(const unsigned char *s)
-{
-	wchar_t wc;
-	if (mbtowc(&wc, (char *)s, MAXCHARLEN) < 0)
-			return 0;
-	return iswalnum(wc);
-}
-
-size_t move_mbleft(const unsigned char *s, size_t pos)
-{
-	while (pos && is_continuation_byte(s[--pos]))
-		;
-	return pos;
-}
-
-size_t move_mbright(const unsigned char *s, size_t pos)
-{
-	while (s[++pos] && is_continuation_byte(s[pos]))
-		;
-	return pos;
 }

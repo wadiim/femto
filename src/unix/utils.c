@@ -1,5 +1,5 @@
 #include <sys/stat.h>
-#include "utils.h"
+#include "chars.h"
 
 bool is_file_exist(char *filename)
 {
