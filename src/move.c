@@ -25,43 +25,6 @@ void do_end(void)
 	femto.file.cursor.x = line_mblen(femto.file.buffer.curr);
 }
 
-void do_page_up(void)
-{
-	size_t y, i;
-	get_window_size(NULL, &y);
-	for (i = y - 1; i > 0 && femto.file.top->prev &&
-		femto.file.buffer.curr->prev; --i)
-	{
-		move_up();
-		femto.file.top = femto.file.top->prev;
-	}
-	if (femto.file.cursor.y != 0 && femto.file.top->prev == NULL)
-	{
-		for (; i > 0 && femto.file.buffer.curr->prev; --i)
-			move_up();
-	}
-	fix_cursor_x();
-}
-
-void do_page_down(void)
-{
-	size_t y;
-	get_window_size(NULL, &y);
-	for (size_t i = 0; i < y - 1 && femto.file.top->next &&
-		femto.file.buffer.curr->next; ++i)
-	{
-		move_down();
-		femto.file.top = femto.file.top->next;
-	}
-	fix_cursor_x();
-}
-
-void do_left(void)
-{
-	if (femto.file.cursor.x > 0)
-		--femto.file.cursor.x;
-}
-
 void do_up(void)
 {
 	if (femto.file.buffer.curr->prev)
@@ -73,12 +36,6 @@ void do_up(void)
 	}
 }
 
-void do_right(void)
-{
-	if (femto.file.cursor.x < line_mblen(femto.file.buffer.curr))
-		++femto.file.cursor.x;
-}
-
 void do_down(void)
 {
 	if (femto.file.buffer.curr->next)
@@ -88,16 +45,16 @@ void do_down(void)
 	}
 }
 
-void move_up(void)
+void do_left(void)
 {
-	--femto.file.cursor.y;
-	femto.file.buffer.curr = femto.file.buffer.curr->prev;
+	if (femto.file.cursor.x > 0)
+		--femto.file.cursor.x;
 }
 
-void move_down(void)
+void do_right(void)
 {
-	++femto.file.cursor.y;
-	femto.file.buffer.curr = femto.file.buffer.curr->next;
+	if (femto.file.cursor.x < line_mblen(femto.file.buffer.curr))
+		++femto.file.cursor.x;
 }
 
 void do_prev_word(void)
@@ -166,6 +123,37 @@ void do_next_word(void)
 	femto.file.cursor.x = index_to_mbnum(str, pos);
 }
 
+void do_page_up(void)
+{
+	size_t y, i;
+	get_window_size(NULL, &y);
+	for (i = y - 1; i > 0 && femto.file.top->prev &&
+		femto.file.buffer.curr->prev; --i)
+	{
+		move_up();
+		femto.file.top = femto.file.top->prev;
+	}
+	if (femto.file.cursor.y != 0 && femto.file.top->prev == NULL)
+	{
+		for (; i > 0 && femto.file.buffer.curr->prev; --i)
+			move_up();
+	}
+	fix_cursor_x();
+}
+
+void do_page_down(void)
+{
+	size_t y;
+	get_window_size(NULL, &y);
+	for (size_t i = 0; i < y - 1 && femto.file.top->next &&
+		femto.file.buffer.curr->next; ++i)
+	{
+		move_down();
+		femto.file.top = femto.file.top->next;
+	}
+	fix_cursor_x();
+}
+
 void do_top(void)
 {
 	femto.file.cursor.x = femto.file.cursor.y = 0;
@@ -187,4 +175,16 @@ void do_bottom(void)
 	get_window_size(NULL, &y);
 	while (--y && femto.file.top->prev)
 		femto.file.top = femto.file.top->prev;
+}
+
+void move_up(void)
+{
+	--femto.file.cursor.y;
+	femto.file.buffer.curr = femto.file.buffer.curr->prev;
+}
+
+void move_down(void)
+{
+	++femto.file.cursor.y;
+	femto.file.buffer.curr = femto.file.buffer.curr->next;
 }
