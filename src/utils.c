@@ -36,15 +36,23 @@ char *size_t_to_str(size_t num)
 	return str;
 }
 
-size_t str_width(const unsigned char *s, size_t len)
-{
-	return length_to_width(s, len);
-}
-
 void fill_with_spaces(char *s, size_t len)
 {
 	for (size_t i = 0; i < len; ++i)
 		s[i] = ' ';
+}
+
+size_t find_first_nonblank(const unsigned char *s)
+{
+	size_t i = 0;
+	while (isspace(s[i]) && s[i++] != 0)
+		;
+	return i;
+}
+
+size_t str_width(const unsigned char *s, size_t len)
+{
+	return length_to_width(s, len);
 }
 
 size_t length_to_width(const unsigned char *s, size_t len)
@@ -82,12 +90,4 @@ size_t width_to_length(const unsigned char *s, size_t width)
 	while (s[len] != 0 && is_continuation_byte(s[len]))
 		++len;
 	return len;
-}
-
-size_t find_first_nonblank(const unsigned char *s)
-{
-	size_t i = 0;
-	while (isspace(s[i]) && s[i++] != 0)
-		;
-	return i;
 }
