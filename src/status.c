@@ -9,7 +9,7 @@
 #include "die.h"
 #include "io.h"
 
-Status_input *statin;
+StatusInput *statin;
 
 void status_realloc(size_t len);
 void status_set_default(size_t len);
@@ -248,7 +248,7 @@ void status_do_backspace(void)
 
 void status_input_init(void)
 {
-	statin = (Status_input *)malloc(sizeof(Status_input));
+	statin = (StatusInput *)malloc(sizeof(StatusInput));
 	statin->cx = 0;
 	statin->charsoff = 0;
 }

@@ -21,7 +21,7 @@ typedef struct
 	char *msg;
 	Line *input;
 	size_t charsoff;
-} Status_input;
+} StatusInput;
 
 void status_init(void);
 void status_free(void);
