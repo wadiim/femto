@@ -72,7 +72,7 @@ int parse_sequence(unsigned char *s)
 
 int parse_escape_sequence(void)
 {
-	unsigned char buf[4] = { 0 };
+	unsigned char buf[5] = { 0 };
 
 	if (get_char(&buf[0]) == -1)
 		return ESC;
